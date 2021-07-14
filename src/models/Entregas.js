@@ -1,4 +1,4 @@
-const Sequelize = request("sequelize");
+const Sequelize = require("sequelize");
 
 class Entregas extends Sequelize.Model {
     static init(sequelize) {
