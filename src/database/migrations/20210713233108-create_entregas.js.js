@@ -9,6 +9,19 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
+	  entregaDate: {
+		type: Sequelize.DATE,
+		allowNull: false,
+		defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+	  },
+	  value: {
+		type: Sequelize.FLOAT,
+		allowNull: false,
+	  },
+	  status: {
+		type: Sequelize.STRING,
+		allowNull: false,
+	  },
       description: {
 				type: Sequelize.STRING,
 				allowNull: false,
