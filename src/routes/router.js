@@ -3,8 +3,9 @@ const associadosRouter = require("./associadosRouter");
 const motoboysRouter = require("./motoboysRouter");
 const clientesRouter = require("./clientesRouter");
 const entregasRouter = require("./entregasRouter");
+const router = express.Router();
 
-router.get("/", (res, req) => {
+router.get("/", (req, res) => {
     res.send("It's working");
 });
 
