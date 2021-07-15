@@ -1,0 +1,99 @@
+const Associados = require("../models/Associados");
+const Clientes = require("../models/Clientes");
+const Motoboys = require("../models/Motoboys");
+const Entregas = require("../models/Entregas");
+const Sequelize = require("sequelize");
+const { search } = require("../routes/associadosRouter");
+
+module.exports = {
+    async newAssociado(req, res) {
+        const { name, cnpj, password, address } = req.body;
+        if (!name || !cnpj || !password) {
+            res.status(400).json({
+                msg: "Dados obrigatórios não foram preenchidos.",
+            });
+        }
+
+        const isAssociadosNew = await Associados.findOne({
+            where: { cnpj },
+        });
+
+        if (isAssociadosNew)
+            res.status(403).json({ msg: "Associado já foi cadastrado." });
+        else {
+            const associado = await Associados.create({
+                name,
+                cnpj,
+                password,
+                address,
+            }).catch((error) => {
+                res.status(500).json({ msg: "Não foi possível inserir os dados." });
+            });
+            if (associado)
+                res.status(201).json({ msg: "Novo associado foi adicionado." });
+            else
+                res.status(404).json({ msg: "Não foi possível cadastrar novo associado." });
+        }
+    },
+
+    async listAllAssociados(req, res) {
+        const associado = await Associados.findAll({
+            order: [["name", "ASC"]],
+        }).catch((error) => {
+            res.status(500).json({ msg: "Falha na conexão." });
+        });
+        if (associado)
+            res.status(200).json({ associado });
+        else
+            res.status(404).json({ msg: "Não foi possível enconstrar associados." });
+    },
+
+    async searchAssociadoByCNPJ(req, res) {
+        const name = req.body.cnpj;
+        if (!cnpj)
+            res.status(400).json({ msg: "Parâmetro CNPJ está vazio." });
+        const associado = await Associados.findOne({
+            where: { cnpj },
+        });
+        console.log(associado);
+        if (associado) {
+            if (associado == "")
+                res.status(404).json({ msg: "Associado não encontrado." });
+            else 
+                res.status(200).json({ associado });
+        } else
+            res.status(404).json({ msg: "Associado não encontrado." });    
+    },
+
+    async updateAssociado(req, res) {
+        const associadoId = req.body.id;
+        const associado = req.body;
+        if (!associadoId)
+            res.status(400).json({ msg: "ID do associado vazio." });
+        else {
+            const associadoExists = await Associados.findByPk(associadoId);
+            if (!associadoExists)
+                res.status(404).json({ msg: "Associado não encontrado." });
+            else {
+                if (associado.name || associado.cnpj || associado.password) {
+                    await Associados.update(associado, {
+                        where: { id: associadoId },
+                    });
+                    return res.status(200).json({ msg: "Associado atualizado com sucesso." });
+                } else 
+                    res.status(400).json({ msg: "Campos obrigatórios não preenchidos." });
+            }
+        }
+    },
+
+    async deleteAssociado(res, req) {
+        const associadoId = req.params.id;
+        const deleteAssociado = await Associados.destroy({
+            where: { id: associadoId },
+        });
+        if (deleteAssociado != 0)
+            res.status(200).json({ msg: "Associado excluido com sucesso." });
+        else
+            res.status(404).json({ msg: "Associado não encontrado." });
+    },
+};
