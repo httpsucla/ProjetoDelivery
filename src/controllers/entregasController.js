@@ -45,14 +45,8 @@ module.exports = {
   },
 
   async listEntregaReal(req, res) {
-    const status = req.body.status;
-    if (!status)
-        res.status(400).json({
-            msg: "Parâmetro status está vazio.",
-        });
-    const Op = Sequelize.Op;
     const entrega = await Entregas.findAll({
-        where: { status },
+        order: [[ "status" ]],
     });
     if (entrega) {
         if (entrega == "Realizado")
@@ -64,14 +58,8 @@ module.exports = {
   },
 
   async listEntregaPend(req, res) {
-    const status = req.body.status;
-    if (!status)
-        res.status(400).json({
-            msg: "Parâmetro status está vazio.",
-        });
-    const Op = Sequelize.Op;
     const entrega = await Entregas.findAll({
-        where: { status },
+        order: [[ "status" ]],
     });
     if (entrega) {
         if (entrega == "Pendente")
