@@ -52,7 +52,7 @@ module.exports = {
         const cpf = req.body.cpf;
         if (!cpf)
             res.status(400).json({ msg: "Parâmetro CPF está vazio." });
-        const motoboy = await Clientes.findOne({
+        const motoboy = await Motoboys.findOne({
             where: { cpf },
         });
         console.log(motoboy);
