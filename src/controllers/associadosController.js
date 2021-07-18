@@ -3,7 +3,7 @@ const Clientes = require("../models/Clientes");
 const Motoboys = require("../models/Motoboys");
 const Entregas = require("../models/Entregas");
 const Sequelize = require("sequelize");
-const { search } = require("../routes/associadosRouter");
+// const { search } = require("../routes/associadosRouter");
 
 module.exports = {
     async newAssociado(req, res) {
@@ -45,11 +45,11 @@ module.exports = {
         if (associado)
             res.status(200).json({ associado });
         else
-            res.status(404).json({ msg: "Não foi possível enconstrar associados." });
+            res.status(404).json({ msg: "Não foi possível encontrar associados." });
     },
 
     async searchAssociadoByCNPJ(req, res) {
-        const name = req.body.cnpj;
+        const cnpj = req.body.cnpj;
         if (!cnpj)
             res.status(400).json({ msg: "Parâmetro CNPJ está vazio." });
         const associado = await Associados.findOne({
