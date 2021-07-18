@@ -3,8 +3,51 @@ const Clientes = require("../models/Clientes");
 const Motoboys = require("../models/Motoboys");
 const Entregas = require("../models/Entregas");
 const Sequelize = require("sequelize");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+function passwordValidation(password) {
+	if (password.length < 8) return "Senha deve ter no mínimo 8 caracteres.";
+	else if (!password.match(/[a-zA-Z]/g))
+		return "Senha deve ter no mínimo uma letra.";
+	else if (!password.match(/[0-9]+/))
+		return "Senha deve ter no mínimo um número.";
+    else if (!password.match(/[@*_+-./]/))
+        return "Senha deve ter no mínimo um caracter especial"
+	else return "OK";
+}
+
+function generateToken(id) {
+	process.env.JWT_SECRET = Math.random().toString(36).slice(-20);
+	const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+		expiresIn: 18000, // Token expira em 24 horas
+	});
+	return token;
+}
 
 module.exports = {
+    async authentication(req, res) {
+		const cpf = req.body.cpf;
+		const password = req.body.password;
+		if (!cpf || !password)
+			return res.status(400).json({ msg: "Campos obrigatórios vazios!" });
+		try {
+			const motoboy = await Motoboys.findOne({
+				where: { cpf },
+			});
+			if (!motoboy)
+				return res.status(404).json({ msg: "Usuário ou senha inválidos." });
+			else {
+				if (bcrypt.compareSync(password, motoboy.password)) {
+					const token = generateToken(motoboy.id);
+					return res.status(200).json({ msg: "Autenticado com sucesso", token });
+				} else
+					return res.status(404).json({ msg: "Usuário ou senha inválidos." });
+			}
+		} catch (error) { 
+            res.status(500).json(error);
+		}
+	},
 
     async newMotoboy(req, res) {
         const { name, cpf, password, phone } = req.body;
@@ -96,4 +139,9 @@ module.exports = {
         else
             res.status(404).json({ msg: "Motoboy não encontrado." });
     },
+
+    logout(req, res) {
+		process.env.JWT_SECRET = Math.random().toString(36).slice(-20);
+		res.sendStatus(200);
+	},
 }

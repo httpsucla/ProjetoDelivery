@@ -3,9 +3,32 @@ const Clientes = require("../models/Clientes");
 const Motoboys = require("../models/Motoboys");
 const Entregas = require("../models/Entregas");
 const Sequelize = require("sequelize");
+const bcrypt = require("bcryptjs");
 // const { search } = require("../routes/associadosRouter");
 
 module.exports = {
+    async authentication(req, res) {
+		const cnpj = req.body.cnpj;
+		const password = req.body.password;
+		if (!cnpj || !password)
+			return res.status(400).json({ msg: "Campos obrigatórios vazios!" });
+		try {
+			const associado = await Associados.findOne({
+				where: { cnpj },
+			});
+			if (!associado)
+				return res.status(404).json({ msg: "Usuário ou senha inválidos." });
+			else {
+				if (bcrypt.compareSync(password, associado.password)) {
+					const token = generateToken(associado.id);
+					return res.status(200).json({ msg: "Autenticado com sucesso", token });
+				} else
+					return res.status(404).json({ msg: "Usuário ou senha inválidos." });
+			}
+		} catch (error) { 
+            res.status(500).json(error);
+		}
+	},
     async newAssociado(req, res) {
         const { name, cnpj, password, address } = req.body;
         if (!name || !cnpj || !password) {
@@ -96,4 +119,9 @@ module.exports = {
         else
             res.status(404).json({ msg: "Associado não encontrado." });
     },
+
+    logout(req, res) {
+		process.env.JWT_SECRET = Math.random().toString(36).slice(-20);
+		res.sendStatus(200);
+	},
 };
