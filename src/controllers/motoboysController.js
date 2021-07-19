@@ -20,7 +20,7 @@ function passwordValidation(password) {
 function generateToken(id) {
 	process.env.JWT_SECRET = Math.random().toString(36).slice(-20);
 	const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-		expiresIn: 18000, // Token expira em 24 horas
+		expiresIn: 18000, // Token expira em 5 horas
 	});
 	return token;
 }
