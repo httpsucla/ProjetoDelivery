@@ -87,8 +87,30 @@ module.exports = {
       res.status(404).json({ msg: "Não foi possível encontrar entregas." });
   },
 
-  async updateEntregaPend(req, res) { },
-
+  async updateEntregaPend(req, res) {
+    const entregaId = req.body.id;
+    const entrega = req.body;
+    const status = req.body.status;
+    if (!entregaId)
+        res.status(400).json({ msg: "ID da entrega vazia." });
+    else if (status != "Pendente")
+        res.status(404).json({ msg: "Não existe entregas pendentes." })
+    else {
+        const associadoExists = await Entregas.findByPk(entregaId);
+        if (!associadoExists)
+            res.status(404).json({ msg: "Entrega não encontrada." });
+        else {
+            if (entrega.entregaDate || entrega.description || entrega.motoboyId || entrega.clienteId || entrega.associadoId) {
+                await Entregas.update(entrega, {
+                    where: { id: entregaId },
+                });
+                return res.status(200).json({ msg: "Entrega atualizada com sucesso." });
+            } else 
+                res.status(400).json({ msg: "Campos obrigatórios não preenchidos." });
+        }
+    }
+   },
+  
   async deleteEntrega(req, res) {
     const entregaId = req.params.id;
     const deleteEntrega = await Entregas.destroy({
