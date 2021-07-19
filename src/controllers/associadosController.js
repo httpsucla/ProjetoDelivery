@@ -136,7 +136,7 @@ module.exports = {
     },
 
     async deleteAssociado(res, req) {
-        const associadoId = req.params.id;
+        const associadoId = req.body.id;
         const deleteAssociado = await Associados.destroy({
             where: { id: associadoId },
         });

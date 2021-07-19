@@ -112,7 +112,7 @@ module.exports = {
    },
   
   async deleteEntrega(req, res) {
-    const entregaId = req.params.id;
+    const entregaId = req.body.id;
     const deleteEntrega = await Entregas.destroy({
       where: { id: entregaId },
     });
