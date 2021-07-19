@@ -4,7 +4,8 @@ const Motoboys = require("../models/Motoboys");
 const Entregas = require("../models/Entregas");
 const Sequelize = require("sequelize");
 const bcrypt = require("bcryptjs");
-// const { search } = require("../routes/associadosRouter");
+const jwt = require("jsonwebtoken");
+
 function passwordValidation(password) {
 	if (password.length < 8) return "Senha deve ter no mínimo 8 caracteres.";
 	else if (!password.match(/[a-zA-Z]/g))
