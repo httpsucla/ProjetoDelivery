@@ -8,7 +8,7 @@ associadosRouter.post("/newAssociado", auth, associadosController.newAssociado);
 associadosRouter.get("/listAllAssociados", auth, associadosController.listAllAssociados);
 associadosRouter.post("/searchAssociadoByCNPJ", auth, associadosController.searchAssociadoByCNPJ);
 associadosRouter.put("/updateAssociado", auth, associadosController.updateAssociado);
-associadosRouter.delete("/deleteAssociado/:id", auth, associadosController.deleteAssociado);
+associadosRouter.delete("/deleteAssociado", auth, associadosController.deleteAssociado);
 associadosRouter.get("/logout", auth, associadosController.logout);
 
 module.exports = associadosRouter;
