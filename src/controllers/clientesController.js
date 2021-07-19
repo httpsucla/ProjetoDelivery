@@ -86,7 +86,7 @@ module.exports = {
     },
 
     async deleteCliente(req, res) {
-        const clienteId = req.params.id;
+        const clienteId = req.body.id;
         const deleteCliente = await Clientes.destroy({
             where: { id: clienteId },
         });

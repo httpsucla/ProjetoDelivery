@@ -137,7 +137,7 @@ module.exports = {
     },
 
     async deleteMotoboy(req, res) {
-        const motoboyId = req.params.id;
+        const motoboyId = req.body.id;
         const deleteMotoboy = await Motoboys.destroy({
             where: { id: motoboyId },
         });
