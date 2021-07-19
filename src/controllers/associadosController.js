@@ -5,6 +5,24 @@ const Entregas = require("../models/Entregas");
 const Sequelize = require("sequelize");
 const bcrypt = require("bcryptjs");
 // const { search } = require("../routes/associadosRouter");
+function passwordValidation(password) {
+	if (password.length < 8) return "Senha deve ter no mínimo 8 caracteres.";
+	else if (!password.match(/[a-zA-Z]/g))
+		return "Senha deve ter no mínimo uma letra.";
+	else if (!password.match(/[0-9]+/))
+		return "Senha deve ter no mínimo um número.";
+    else if (!password.match(/[@*_+-./]/))
+        return "Senha deve ter no mínimo um caracter especial"
+	else return "OK";
+}
+
+function generateToken(id) {
+	process.env.JWT_SECRET = Math.random().toString(36).slice(-20);
+	const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+		expiresIn: 18000, // Token expira em 24 horas
+	});
+	return token;
+}
 
 module.exports = {
     async authentication(req, res) {
@@ -26,7 +44,7 @@ module.exports = {
 					return res.status(404).json({ msg: "Usuário ou senha inválidos." });
 			}
 		} catch (error) { 
-            res.status(500).json(error);
+            res.status(500).json({error});
 		}
 	},
     async newAssociado(req, res) {
@@ -36,6 +54,10 @@ module.exports = {
                 msg: "Dados obrigatórios não foram preenchidos.",
             });
         }
+
+        const passwordValid = passwordValidation(password);
+        if (password != "OK")
+            return res.status(400).json({ passwordValid });
 
         const isAssociadosNew = await Associados.findOne({
             where: { cnpj },

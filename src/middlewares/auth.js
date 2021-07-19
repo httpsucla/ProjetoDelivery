@@ -6,7 +6,8 @@ function verifyJWT(req, res, next) {
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		if (err)
 			return res.status(401).json({ msg: "Falha na autenticação do token." });
-		req.sellerId = decoded.id;
+		req.associadoId = decoded.id;
+        req.motoboyId = decoded.id;
 		next();
 	});
 }
