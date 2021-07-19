@@ -57,7 +57,7 @@ module.exports = {
         }
 
         const passwordValid = passwordValidation(password);
-        if (password !== "OK")
+        if (!password)
             return res.status(400).json({ passwordValid });
 
         const isAssociadosNew = await Associados.findOne({
