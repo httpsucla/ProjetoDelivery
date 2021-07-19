@@ -56,7 +56,7 @@ module.exports = {
         }
 
         const passwordValid = passwordValidation(password);
-        if (password != "OK")
+        if (password !== "OK")
             return res.status(400).json({ passwordValid });
 
         const isAssociadosNew = await Associados.findOne({
@@ -66,10 +66,13 @@ module.exports = {
         if (isAssociadosNew)
             res.status(403).json({ msg: "Associado já foi cadastrado." });
         else {
+            const salt = bcrypt.genSaltSync(12);
+            const hash = bcrypt.hashSync(password, salt);
+
             const associado = await Associados.create({
                 name,
                 cnpj,
-                password,
+                password: hash,
                 address,
             }).catch((error) => {
                 res.status(500).json({ msg: "Não foi possível inserir os dados." });

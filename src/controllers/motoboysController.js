@@ -57,6 +57,10 @@ module.exports = {
             });
         }
 
+        const passwordValid = passwordValidation(password);
+        if (password !== "OK")
+            return res.status(400).json({ passwordValid });
+
         const isMotoboyNew = await Motoboys.findOne({
             where: { cpf },
         });
@@ -64,10 +68,13 @@ module.exports = {
         if (isMotoboyNew)
             res.status(403).json({ msg: "Motoboy já foi cadastrado." });
         else {
+            const salt = bcrypt.genSaltSync(12);
+            const hash = bcrypt.hashSync(password, salt);
+
             const motoboy = await Motoboys.create({
                 name,
                 cpf,
-                password,
+                password: hash,
                 phone,
             }).catch((error) => {
                 res.status(500).json({ msg: "Não foi possível inserir os dados." });
