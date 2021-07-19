@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 class Associados extends Sequelize.Model {
     static init(sequelize) {
-        super.init (
+        super.init(
             {
                 name: Sequelize.STRING,
                 cnpj: Sequelize.STRING,
@@ -15,7 +15,7 @@ class Associados extends Sequelize.Model {
     }
 
     static associate(models) {
-        this.hasMany(models.Associados, { foreignKey: "associadoId" });
+        this.hasMany(models.Entregas, { foreignKey: "associadoId" });
     }
 }
 
