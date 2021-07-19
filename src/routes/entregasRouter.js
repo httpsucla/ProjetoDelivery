@@ -6,9 +6,9 @@ entregasRouter.post("/newEntrega",entregasController.newEntrega);
 entregasRouter.get("/listAllEntrega", entregasController.listAllEntrega);
 entregasRouter.get("/listEntregaReal", entregasController.listEntregaReal);
 entregasRouter.get("/listEntregaPend", entregasController.listEntregaPend);
-entregasRouter.get("/searchEntregaByMotoboy", entregasController.searchEntregaByMotoboy);
+entregasRouter.get("/searchEntregaByMotoboy/:motoboyId", entregasController.searchEntregaByMotoboy);
 entregasRouter.put("/updateEntregaPend", entregasController.updateEntregaPend);
-entregasRouter.delete("/deleteEntrega", entregasController.deleteEntrega);
+entregasRouter.delete("/deleteEntrega/:id", entregasController.deleteEntrega);
 
 
 module.exports = entregasRouter;
