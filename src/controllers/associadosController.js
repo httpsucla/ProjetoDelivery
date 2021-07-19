@@ -11,8 +11,8 @@ function passwordValidation(password) {
 		return "Senha deve ter no mínimo uma letra.";
 	else if (!password.match(/[0-9]+/))
 		return "Senha deve ter no mínimo um número.";
-    else if (!password.match(/[@*_+-./]/))
-        return "Senha deve ter no mínimo um caracter especial"
+    else if (!password.match(/[@$!%*?&]/))
+        return "Senha deve ter no mínimo um caractere especial."
 	else return "OK";
 }
 
